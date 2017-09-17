@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Design Doc</title>
+  </head>
+  <body>
+    <h1>User-First Design</h1>
+    Story: As a new user, I should be able to create and register an account
+    <br>
+    Description:
+    <br>
+      - User goes to home page
+      <br>
+      - Clicks the Create Account button on the top right
+      <br>
+      - Taken to a page with a form where they can enter the account information we need (username, email, password most likely)
+      <br>
+      - The user fills out the information and presses the Register button on the bottom of the modal.
+      <br>
+      - Shortly after, the user receives an email to Confirm her registration by clicking a link
+      <br>
+      - Once the link is clicked, the account is ready to use
+      <br>
+    <br>
+    <br>
+
+    
+    Story: As an existing user, I should be able to log in
+    <br>
+    Description:
+    <br>
+      - Existing user goes to home page
+      <br>
+      - Clicks login button on top right
+      <br>
+      - Modal pops up asking for user/email and password
+      <br>
+      - User clicks sign in button at the bottom of the modal
+      <br>
+      - Credentials are correct?
+      <br>
+        - If so, Redirect to home page but now we're logged in so there is no login button anymore
+        <br>
+        - Else, remain in modal and show error message
+        <br>
+    
+    <br>
+    <br>
+
+
+    
+    Story:
+    As an existing user, I should be able to browse posts from the users I follow
+    <br>
+    Description
+    <br>
+      - Existing user goes to home page (logs in if not logged in yet)
+      <br>
+      - The main view of the home page should show a scrollable list of posts (ordered by recentness)
+      <br>
+      - Each post will have the text of the post as well as information about the user who posted it (username and image)
+      <br>
+    
+    <br>
+    <br>
+
+    
+    Story:
+    As an existing user, I should be able to view a user's profile and "follow" that user
+    <br>
+    Description:
+    <br>
+      - Existing user goes to the home page 
+      <br>
+      - Clicks on the username attached to any of the posts which will redirect him to that user's profile page
+      <br>
+        - Can also click on your own username on the top right to be taken to your own profile page
+        <br>
+      - The profile will contain the user's username, email, picture, and list of posts that the user has made
+      <br>
+      - There will also be a follow button on the page (if it is not your own user)
+      <br>
+        - Clicing the follow button will cause it to change color and text to display "Followed"
+        <br>
+    
+    <br>
+    <br>
+
+
+    
+    Story:
+    As an existing user, I should be able to create a new post
+    <br>
+    Description:
+    <br>
+      - Existing user goes to the home page and clicks create post
+      <br>
+      - Taken to another page with a text box prompting me to create a new post
+      <br>
+      - When I click inside the text box, it expands into a paragraph-ish size
+      <br>
+      - User can type in any text (no limit) and then click the Create Post button
+      <br>
+      - The post is now created
+    
+    <br>
+    <br>
+
+
+    
+    Story:
+    As a user viewing a post, I should be able to distinguish @ mentions and #'s from plain text
+    <br>
+    Description:
+    <br>
+      - When viewing any post, any @(username) text will be converted into a hyper link directing you to that user's profile (if the username exists)
+        <br>
+      - When viewing any post, any #(something) text will be shown as a blue color (no trending yet)
+        <br>
+    <br>
+    <br>
+
+
+
+
+
+
+
+
+    <h1>Data-First Design</h1>
+    
+    User
+    <br>
+      - Username (String)
+      <br>
+      - Email (String) 
+      <br>
+      - Password (String and also encrypted)
+      <br>
+      - Profile pic (Image)
+      <br>
+      - Confirmed email? flag (Boolean)
+      <br>
+      - Date created (Date)
+      <br>
+      - Date last updated (Date)
+      <br><br>
+
+    RESTful Routes
+    <br>
+      - create: a page showing account created and telling you to check your email to confirm the account
+      <br>
+      - show: the user's profile page which includes public user info as well as the user's posts'<br>
+      - update: essentially the show page pointing at your own user with a message saying "Updated Profile"<br>
+      - delete: page saying "(Username) Deleted"<br>
+      - new: contains a form to create a new user (username, email, password) and a create account button<br>
+      - edit: similar to new except the fields are already filled out with existing info (but you can't change the email) and the button will say update instead of create<br>
+      - index: When you search for a user, this is the page that will come up with a list of all users that match your search string<br>
+    
+    <br>
+    <br>
+
+
+    
+    Post<br>
+      - UserID of the user who posted this (integer pointing to the user table)<br>
+      - Text in post (String and need to set some very high max length based on our data storage) <br>
+      - Number of "favorites" (Int) maybe?<br><br>
+
+    RESTful Routes<br>
+      - create: back to the home page with the list of posts but your new post is on top<br>
+      - show: a page that shows just a single post<br>
+      - update: back to the home page with the list of posts but your updated post is on top (and there is a message saying updated)<br>
+      - delete: page saying "Post Deleted"<br>
+      - new: contains a form to create a new post (just a textbox) and a create post button<br>
+      - edit: similar to new except the text is already filled out with existing post and the button will say update instead of create<br>
+      - index: This is our home page, a list of posts from all users that the current user follows (and the user's own posts as well)<br>
+    
+    <br>
+    <br>
+
+
+    
+    A "Follow"<br>
+      - UserID of the follower (integer pointing to the user table)<br>
+      - UserID of the follow-ee (integer pointing to the user table)<br>
+      - Date created (Date)<br><br>
+
+    RESTful Routes<br>
+      - create: the show page of the user you just followed but the follow button now says "Following"<br>
+      - show: Don't think show really makes sense for a follow<br>
+      - update: Don't think updated really makes sense for a follow<br>
+      - delete: the show page of the user you just un-followed with a message "you are no longer following this person"<br>
+      - new: a button on each profile page (as long as it's not yours) that says "Follow"<br>
+      - edit: Don't think edit really makes sense for a follow<br>
+      - index: For any given user, a list of the people they are following<br>
+    
+    <br>
+    <br>
+
+  </body>
+</html>
