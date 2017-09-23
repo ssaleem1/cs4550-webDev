@@ -14,7 +14,7 @@ config :microblog, MicroblogWeb.Endpoint,
 # Configure your database
 config :microblog, Microblog.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "microblog_prod",
+  username: "microblog",
+  password: "microblog",
+  database: "microblog_dev",
   pool_size: 15
