@@ -1,30 +1,39 @@
-<h2>Listing Posts</h2>
+<h2>Your Feed</h2>
+
+
+
+<%= if @current_user do %>
+  <span><%= link "Create a new post", to: post_path(@conn, :new), class: "btn btn-primary mb-3" %></span>
+<% end %>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Userid</th>
+      <th>User</th>
       <th>Message</th>
       <th>Favs</th>
-
-      <th></th>
+      <th>Last Updated</th>
+      <th>Created</th>
     </tr>
   </thead>
   <tbody>
 <%= for post <- @posts do %>
     <tr>
-      <td><%= post.userId %></td>
+      <td><%= link post.user.email, to: user_path(@conn, :show, post.user) %></td>
       <td><%= post.message %></td>
       <td><%= post.favs %></td>
+      <td><%= Date.to_string(post.updated_at) %></td>
+      <td><%= Date.to_string(post.inserted_at) %></td>
 
       <td class="text-right">
         <span><%= link "Show", to: post_path(@conn, :show, post), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: post_path(@conn, :edit, post), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: post_path(@conn, :delete, post), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        <%= if @current_user && @current_user.id == post.user.id do %>
+          <span><%= link "Edit", to: post_path(@conn, :edit, post), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Delete", to: post_path(@conn, :delete, post), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        <% end %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<span><%= link "New Post", to: post_path(@conn, :new) %></span>

@@ -6,6 +6,8 @@ defmodule MicroblogWeb.PostController do
 
   def index(conn, _params) do
     posts = Blog.list_posts()
+	|> Microblog.Repo.preload([:user])
+    posts = Enum.reverse(posts)
     render(conn, "index.html", posts: posts)
   end
 
@@ -15,6 +17,8 @@ defmodule MicroblogWeb.PostController do
   end
 
   def create(conn, %{"post" => post_params}) do
+    post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
+    post_params = Map.put(post_params, "favs", 0)
     case Blog.create_post(post_params) do
       {:ok, post} ->
         conn

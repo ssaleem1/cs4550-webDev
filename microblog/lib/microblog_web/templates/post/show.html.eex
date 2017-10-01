@@ -4,7 +4,7 @@
 
   <li>
     <strong>Userid:</strong>
-    <%= @post.userId %>
+    <%= @post.user_id %>
   </li>
 
   <li>

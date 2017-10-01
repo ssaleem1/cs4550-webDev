@@ -1,0 +1,33 @@
+<h2>User Profile</h2>
+
+<ul>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+  <li>
+    <strong>Joined on:</strong>
+    <%= Date.to_string(@user.inserted_at) %>
+  </li>
+
+</ul>
+
+<%= if @current_user && !@is_following && @current_user.id != @user.id do %>
+        <%= form_for @conn, follow_path(@conn, :create), [as: "follow"], fn f -> %>
+                <%= hidden_input f, :follower_id, value: @current_user.id %>
+                <%= hidden_input f, :followee_id, value: @user.id %>
+
+                <div class="form-group">
+                        <%= submit "Follow", class: "btn btn-primary mt-3" %>
+                </div>
+        <% end %>
+<% end %>
+
+<%= if @is_following do %>
+	<span class="badge badge-info">You are following <%= @user.email %></span>
+<% end %>
+
+<%= if @current_user && @current_user.id == @user.id do %>
+        <span><%= link "Edit", to: user_path(@conn, :edit, @user) %></span>
+<% end %>
