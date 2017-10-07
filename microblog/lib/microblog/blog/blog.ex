@@ -8,9 +8,14 @@ defmodule Microblog.Blog do
 
   alias Microblog.Blog.Post
   alias Microblog.Blog.Follow
-  
+  alias Microblog.Blog.Like
+
   def is_following(follower, followee) do
 	Repo.get_by(Follow, [follower_id: follower, followee_id: followee])
+  end
+
+  def has_liked(user_id, post_id) do
+    Repo.all(from r in Like, where: r.user_id == ^user_id and r.post_id == ^post_id)
   end
 
   @doc """
@@ -201,5 +206,96 @@ defmodule Microblog.Blog do
   """
   def change_follow(%Follow{} = follow) do
     Follow.changeset(follow, %{})
+  end
+
+  alias Microblog.Blog.Like
+
+  @doc """
+  Returns the list of likes.
+
+  ## Examples
+
+      iex> list_likes()
+      [%Like{}, ...]
+
+  """
+  def list_likes do
+    Repo.all(Like)
+    |> Repo.preload(:user)
+  end
+
+  def list_post_likes(post_id) do
+    Repo.all(from r in Like, where: r.post_id == ^post_id)
+    |> Repo.preload(:user)
+  end
+
+  def get_like!(id) do
+    Repo.get!(Like, id)
+    |> Repo.preload(:user)
+  end
+
+  @doc """
+  Creates a like.
+
+  ## Examples
+
+      iex> create_like(%{field: value})
+      {:ok, %Like{}}
+
+      iex> create_like(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_like(attrs \\ %{}) do
+    %Like{}
+    |> Like.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a like.
+
+  ## Examples
+
+      iex> update_like(like, %{field: new_value})
+      {:ok, %Like{}}
+
+      iex> update_like(like, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_like(%Like{} = like, attrs) do
+    like
+    |> Like.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Like.
+
+  ## Examples
+
+      iex> delete_like(like)
+      {:ok, %Like{}}
+
+      iex> delete_like(like)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_like(%Like{} = like) do
+    Repo.delete(like)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking like changes.
+
+  ## Examples
+
+      iex> change_like(like)
+      %Ecto.Changeset{source: %Like{}}
+
+  """
+  def change_like(%Like{} = like) do
+    Like.changeset(like, %{})
   end
 end

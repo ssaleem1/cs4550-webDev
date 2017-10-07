@@ -30,8 +30,14 @@ defmodule MicroblogWeb.PostController do
   end
 
   def show(conn, %{"id" => id}) do
+    has_liked = nil
+    curr_user = conn.assigns[:current_user]
+    if curr_user do
+        has_liked = Blog.has_liked(curr_user.id, id)
+    end
     post = Blog.get_post!(id)
-    render(conn, "show.html", post: post)
+                |> Microblog.Repo.preload([:user])
+    render(conn, "show.html", post: post, has_liked: has_liked)
   end
 
   def edit(conn, %{"id" => id}) do

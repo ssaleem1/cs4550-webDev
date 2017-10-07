@@ -1,10 +1,10 @@
-<h2>Show Post</h2>
+<h2>Post View</h2>
 
 <ul>
 
   <li>
-    <strong>Userid:</strong>
-    <%= @post.user_id %>
+    <strong>User:</strong>
+    <%= @post.user.email %>
   </li>
 
   <li>
@@ -12,12 +12,52 @@
     <%= @post.message %>
   </li>
 
-  <li>
-    <strong>Favs:</strong>
-    <%= @post.favs %>
-  </li>
-
 </ul>
 
-<span><%= link "Edit", to: post_path(@conn, :edit, @post) %></span>
+<div id="post-likes"
+     data-path="<%= like_path(@conn, :index) %>"
+     data-post_id="<%= @post.id %>">
+</div>
+
+<script id="likes-template" type="text/x-handlebars-template">
+  <div class="m-2">
+    <h2>Likes</h2>
+
+    <ul>
+      {{#each data}}
+
+      <li>
+        <strong>Email of Liker:</strong>
+         {{user_email}}
+      </li>
+
+      {{else}}
+
+      <p>No likes yet.</p>
+
+      {{/each}}
+    </ul>
+    
+  </div>
+</script>
+
+<%= if @current_user && length(@has_liked) == 0 do %>
+  <div class="m-2">
+    <button id="like-button" class="btn btn-primary"
+            data-user-id="<%= @current_user.id %>">
+
+            Like</button>
+  </div>
+<% end %>
+
+<%= if @current_user && length(@has_liked) != 0 do %>
+  <div class="m-2">
+    <span class="badge badge-info">You liked this post!</span>
+  </div>
+<% end %>
+
+<%= if @current_user && @current_user.id == @post.user.id do %>
+  <span><%= link "Edit", to: post_path(@conn, :edit, @post) %></span>
+<% end %>
+
 <span><%= link "Back", to: post_path(@conn, :index) %></span>
