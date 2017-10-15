@@ -7,7 +7,7 @@ if [ ! -d "$DIR" ]; then
   printf "Usage: ./deploy.sh <path>\n"
   exit
 fi
-
+echo "test"
 echo "Deploy to [$DIR]"
 
 mix deps.get
