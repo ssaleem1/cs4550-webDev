@@ -19,6 +19,7 @@ defmodule MicroblogWeb.PostController do
   def create(conn, %{"post" => post_params}) do
     post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
     post_params = Map.put(post_params, "favs", 0)
+    MicroblogWeb.Endpoint.broadcast("updates:all", "new_post", post_params)
     case Blog.create_post(post_params) do
       {:ok, post} ->
         conn

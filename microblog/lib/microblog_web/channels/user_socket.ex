@@ -1,5 +1,7 @@
 defmodule MicroblogWeb.UserSocket do
   use Phoenix.Socket
+  
+  channel "updates:*", MicroblogWeb.UpdatesChannel
 
   ## Channels
   # channel "room:*", MicroblogWeb.RoomChannel
