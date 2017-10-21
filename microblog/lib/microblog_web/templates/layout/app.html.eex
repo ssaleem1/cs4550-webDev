@@ -38,8 +38,11 @@
         <%= form_for @conn, session_path(@conn, :login), 
               [as: "user", class: "form-inline"], fn f -> %>
           <input type="text" placeholder="email" class="form-control" name="email">
+  <input type="password" placeholder="password"
+         class="form-control" name="password">
           <input type="submit" value="Sign in" class="btn btn-primary">
         <% end %>
+<%= link("Register", to: user_path(@conn, :new)) %>
       <% end %>
    </nav>
 

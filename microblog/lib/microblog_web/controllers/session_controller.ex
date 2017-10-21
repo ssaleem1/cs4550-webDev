@@ -3,8 +3,17 @@ defmodule MicroblogWeb.SessionController do
 
   alias Microblog.Accounts
 
-  def login(conn, %{"email" => email}) do
+  # TODO: Move to user.ex
+  def get_and_auth_user(email, password) do
     user = Accounts.get_user_by_email!(email)
+    case Comeonin.Argon2.check_pass(user, password) do
+      {:ok, user} -> user
+      _else       -> nil
+    end
+  end
+
+  def login(conn, %{"email" => email, "password" => password}) do
+    user = get_and_auth_user(email, password)
 
     if user do
       conn
@@ -14,7 +23,7 @@ defmodule MicroblogWeb.SessionController do
     else
       conn
       |> put_session(:user_id, nil)
-      |> put_flash(:error, "No such user")
+      |> put_flash(:error, "bad email or password")
       |> redirect(to: post_path(conn, :index))
     end
   end

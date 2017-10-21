@@ -3,7 +3,7 @@
 
 
 <%= if @current_user do %>
-  <span><%= link "Create a new post", to: post_path(@conn, :new), id: "likeButton",  class: "btn btn-primary mb-3" %></span>
+<%= render "form.html", Map.put(assigns, :action, post_path(@conn, :create)) %>
 <% end %>
 
 <table class="table" id="postsTable">

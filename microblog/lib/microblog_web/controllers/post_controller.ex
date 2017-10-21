@@ -8,7 +8,10 @@ defmodule MicroblogWeb.PostController do
     posts = Blog.list_posts()
 	|> Microblog.Repo.preload([:user])
     posts = Enum.reverse(posts)
-    render(conn, "index.html", posts: posts)
+
+    changeset = Blog.change_post(%Post{})
+
+    render(conn, "index.html", posts: posts, changeset: changeset)
   end
 
   def new(conn, _params) do
